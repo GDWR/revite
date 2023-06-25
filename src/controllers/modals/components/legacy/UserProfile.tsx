@@ -41,6 +41,7 @@ import { ModalProps } from "../../types";
 export const UserProfile = observer(
     ({
         user_id,
+        server_id,
         isPlaceholder,
         placeholderProfile,
         ...props
@@ -61,6 +62,10 @@ export const UserProfile = observer(
         const [tab, setTab] = useState("profile");
 
         const user = client.users.get(user_id);
+        const member = server_id != undefined
+            ? client.members.getKey({server: server_id,user: user_id, })
+            : undefined;
+
         if (!user) {
             if (props.onClose) useEffect(props.onClose, []);
             return null;
@@ -247,6 +252,15 @@ export const UserProfile = observer(
                             </IconButton>
                         )}
                     </div>
+                    {member && (
+                        <div className={styles.roles}>
+                            {member?.orderedRoles?.flat().map(role =>
+                                <span style={{ color: role.colour }} key={role.rank}>
+                                    {role.name}
+                                </span>
+                            )}
+                        </div>
+                    )}
                     {badges > 0 && (
                         <div
                             style={{

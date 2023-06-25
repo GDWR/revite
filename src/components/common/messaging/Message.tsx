@@ -72,6 +72,7 @@ const Message = observer(
             modalController.push({
                 type: "user_profile",
                 user_id: message.author_id,
+                server_id: message.member?.server?._id,
             });
 
         const handleUserClick = (e: MouseEvent) => {

@@ -100,6 +100,7 @@ export type Modal = {
     | {
           type: "user_profile";
           user_id: string;
+          server_id?: string;
           isPlaceholder?: boolean;
           placeholderProfile?: API.UserProfile;
       }

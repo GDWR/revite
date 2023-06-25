@@ -69,6 +69,7 @@ const ItemContent = memo(
                     modalController.push({
                         type: "user_profile",
                         user_id: item._id,
+                        server_id: context.server_id ?? undefined,
                     });
                 }
             }}

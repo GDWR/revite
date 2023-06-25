@@ -74,7 +74,7 @@ type Action =
     | { action: "remove_member"; channel: Channel; user: User }
     | { action: "kick_member"; target: Member }
     | { action: "ban_member"; target: Member }
-    | { action: "view_profile"; user: User }
+    | { action: "view_profile"; user: User, server?: Server }
     | { action: "message_user"; user: User }
     | { action: "block_user"; user: User }
     | { action: "unblock_user"; user: User }
@@ -329,6 +329,7 @@ export default function ContextMenus() {
                     modalController.push({
                         type: "user_profile",
                         user_id: data.user._id,
+                        server_id: data.server?._id,
                     });
                     break;
 
@@ -645,6 +646,7 @@ export default function ContextMenus() {
                             generateAction({
                                 action: "view_profile",
                                 user,
+                                server,
                             });
                         }
 
