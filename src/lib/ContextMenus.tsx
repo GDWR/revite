@@ -35,6 +35,7 @@ import { takeError } from "../controllers/client/jsx/error";
 import { modalController } from "../controllers/modals/ModalController";
 import { internalEmit } from "./eventEmitter";
 import { getRenderer } from "./renderer/Singleton";
+import ManageRoles from "./contextmenu/ManageRoles";
 
 interface ContextMenuData {
     user?: string;
@@ -113,7 +114,8 @@ type Action =
           key: string;
           state?: NotificationState;
       }
-    | { action: "report"; target: User | Server | Message; messageId?: string };
+    | { action: "report"; target: User | Server | Message; messageId?: string }
+    | { action: "manage_roles"; member: Member };
 
 // ! FIXME: I dare someone to re-write this
 // Tip: This should just be split into separate context menus per logical area.
@@ -459,6 +461,11 @@ export default function ContextMenus() {
                         messageId: data.messageId,
                     });
                     break;
+                case "manage_roles":
+                    openContextMenu("ManageRoles", {
+                        member: data.member,
+                    });
+                    break;
             }
         })().catch((err) => {
             modalController.push({
@@ -729,19 +736,17 @@ export default function ContextMenus() {
                             }
                         }
 
-                        if (
-                            server &&
-                            uid &&
-                            userId !== uid &&
-                            uid !== server.owner
-                        ) {
+                        if (server && user) {
                             const member = client.members.getKey({
                                 server: server._id,
-                                user: user!._id,
+                                user: user._id,
                             })!;
 
                             if (member) {
-                                if (serverPermissions & Permission.KickMembers)
+                                const notMe = userId !== uid;
+                                const notOwner = uid !== server.owner;
+
+                                if (notMe && notOwner && userId !== uid && serverPermissions & Permission.KickMembers)
                                     generateAction(
                                         {
                                             action: "kick_member",
@@ -753,7 +758,7 @@ export default function ContextMenus() {
                                         "var(--error)", // the only relevant part really
                                     );
 
-                                if (serverPermissions & Permission.BanMembers)
+                                if (notMe && notOwner && serverPermissions & Permission.BanMembers)
                                     generateAction(
                                         {
                                             action: "ban_member",
@@ -763,6 +768,16 @@ export default function ContextMenus() {
                                         undefined,
                                         null,
                                         "var(--error)",
+                                    );
+
+                                if (serverPermissions & Permission.ManageRole)
+                                    generateAction({
+                                            action: "manage_roles",
+                                            member
+                                        },
+                                        undefined,
+                                        undefined,
+                                        <ChevronRight size={24} />
                                     );
                             }
                         }
@@ -1244,6 +1259,7 @@ export default function ContextMenus() {
                 }}
             </ContextMenuWithData>
             <CMNotifications />
+            <ManageRoles />
         </>
     );
 }
