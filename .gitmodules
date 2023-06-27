@@ -1,6 +1,6 @@
 [submodule "external/lang"]
 	path = external/lang
-	url = https://github.com/revoltchat/translations
+	url = https://github.com/gdwr/revite-translations
 [submodule "external/components"]
 	path = external/components
 	url = https://github.com/revoltchat/components
