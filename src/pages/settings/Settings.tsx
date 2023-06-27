@@ -272,7 +272,7 @@ export default observer(() => {
                         <Text id="app.special.modals.changelogs.title" />
                     </ButtonItem>
                     <a
-                        href="https://github.com/revoltchat"
+                        href={REPO_URL}
                         target="_blank"
                         rel="noreferrer">
                         <ButtonItem compact>
@@ -300,7 +300,7 @@ export default observer(() => {
                     <div className={styles.version}>
                         <span className={styles.revision}>
                             <a
-                                href={`${REPO_URL}/${GIT_REVISION}`}
+                                href={`${REPO_URL}/commit/${GIT_REVISION}`}
                                 target="_blank"
                                 rel="noreferrer">
                                 {GIT_REVISION.substr(0, 7)}
@@ -309,7 +309,7 @@ export default observer(() => {
                             <a
                                 href={
                                     GIT_BRANCH !== "DETACHED"
-                                        ? `https://github.com/revoltchat/revite/tree/${GIT_BRANCH}`
+                                        ? `${REPO_URL}/tree/${GIT_BRANCH}`
                                         : undefined
                                 }
                                 target="_blank"
